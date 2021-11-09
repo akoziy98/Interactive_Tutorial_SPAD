@@ -6,4 +6,4 @@
 *.toc
 *.fdb_latexmk
 *.fls
-pictures/
+__pycache__/
