@@ -43,10 +43,17 @@ class ProgramGUI(QtWidgets.QMainWindow, design_lbl.Ui_MainWindow):
             self.n_questions = len(self.questions_all)
 
     def setup_task(self):
+        self.button_finish.setEnabled(True)
+
         self.current_ind = 0
         #self.comboBox.setCurrentIndex(0)
-        self.comboBox.clear()
+        try:
+            self.slider.valueChanged.disconnect()
+            self.comboBox.activated.disconnect()
+        except:
+            pass
 
+        self.comboBox.clear()
         self.slider.setMinimum(0)
         self.slider.setMaximum(self.n_questions - 1)
 
@@ -54,6 +61,10 @@ class ProgramGUI(QtWidgets.QMainWindow, design_lbl.Ui_MainWindow):
             self.comboBox.addItem(f'question {str(i + 1)}')
 
         self.slider.setValue(0)
+
+        self.comboBox.activated.connect(self.change_question)
+        self.slider.valueChanged.connect(self.change_question)
+
         self.n_answered = 0
         self.is_finish = False
         self.answer_log = {}
@@ -191,6 +202,7 @@ class ProgramGUI(QtWidgets.QMainWindow, design_lbl.Ui_MainWindow):
 
 
     def push_finish_button(self):
+        self.button_finish.setDisabled(True)
         self.check_true_answers()
         self.is_finish = True
         self.set_progress()
@@ -207,26 +219,21 @@ class ProgramGUI(QtWidgets.QMainWindow, design_lbl.Ui_MainWindow):
             self.real_true_answer[i] = true_answer
             self.max_true_answers += len(true_answer)
 
-            if not (current_answer is None):
-                for el in current_answer:
-                    if el in true_answer:
-                        self.answers_true[i].append(el)
-                    else:
-                        self.answers_false[i].append(el)
-
-            if not (current_answer is None):
-                for el in true_answer:
-                    if not (el in current_answer):
-                        self.answers_miss[i].append(el)
-
-            self.answers_true[i] = set(self.answers_true[i])
-            self.answers_false[i] = set(self.answers_false[i])
-            self.answers_miss[i] = set(self.answers_miss[i])
+            for j in range(len(self.questions_all[i]) - 2):
+                if not (current_answer is None):
+                    if j + 1 in current_answer and j + 1 in true_answer:
+                        self.answers_true[i].append(j + 1)
+                    elif j + 1 in current_answer and not (j + 1 in true_answer):
+                        self.answers_false[i].append(j + 1)
+                    elif not (j + 1 in current_answer) and j + 1 in true_answer:
+                        self.answers_miss[i].append(j + 1)
+                else:
+                    if j + 1 in true_answer:
+                        self.answers_miss[i].append(j + 1)
 
             self.obtained_true_answers += len(self.answers_true[i])
             self.obtained_false_answers += len(self.answers_false[i])
             self.obtained_miss_answers += len(self.answers_miss[i])
-
 
 
 if __name__ == '__main__':

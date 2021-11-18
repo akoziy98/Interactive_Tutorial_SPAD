@@ -1,0 +1,15 @@
+{
+    "task_number" : "4.3: cao_theor_studies",
+    "questions_all": [
+        {   
+            "question": "Какой диаметр активной области у исследуемой структуры?",
+            "true_answer" : [3],
+            "answer_1": "15 мкм",
+            "answer_2": "20 мкм",
+            "answer_3": "23 мкм",
+            "answer_4": "25 мкм"
+        }
+
+      
+    ]
+}
