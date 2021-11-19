@@ -7,4 +7,4 @@
 *.fdb_latexmk
 *.fls
 __pycache__/
-modules/figures_creation
+figures_creation
