@@ -7,15 +7,36 @@ from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QApplication as Application, QWidget, QPushButton as Button, QFileDialog, QComboBox
 from PyQt5.QtWidgets import QLabel as Label, QGridLayout, QDesktopWidget, QSlider
 
-import design_lbl
+#import design_lbl
+import design
 
-class ProgramGUI(QtWidgets.QMainWindow, design_lbl.Ui_MainWindow):
+#class ProgramGUI(QtWidgets.QMainWindow, design_lbl.Ui_MainWindow):
+class ProgramGUI(QtWidgets.QMainWindow, design.Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+
+        self.title = 'SPD papers tests'
+        self.setWindowTitle(self.title)
+        self.left = 100
+        self.top = 100
+        self.width = 1600
+        self.height = 1000
+
         self.DEFAULT_TASK_PATH = "tasks"
         self.label_title.setText(f'Тестирующая система.')
         self.BOUNDARY_LENGTH = 70
+
+        self.dict_label_answer = {1: self.label_answer1, 2: self.label_answer2,
+                                  3: self.label_answer3, 4: self.label_answer4}
+
+        self.dict_checkbox = {1: self.checkBox_1, 2: self.checkBox_2,
+                              3: self.checkBox_3, 4: self.checkBox_4}
+
+        for key, value in self.dict_checkbox.items():
+            not_resize = value.sizePolicy()
+            not_resize.setRetainSizeWhenHidden(True)
+            value.setSizePolicy(not_resize)
 
         self.filename_list = []
         for file_name in os.listdir(self.DEFAULT_TASK_PATH):
@@ -29,6 +50,20 @@ class ProgramGUI(QtWidgets.QMainWindow, design_lbl.Ui_MainWindow):
         self.slider.valueChanged.connect(self.change_question)
         self.button_answer.clicked.connect(self.push_answer_button)
         self.button_finish.clicked.connect(self.push_finish_button)
+
+
+
+        #self.gui_change_window_size()
+
+    # def gui_change_window_size(self):
+    #     width_cur = self.centralwidget.width()
+    #     height_cur = self.centralwidget.height()
+    #     if width_cur != 100 and height_cur != 30:
+    #         self.centralwidget.setFixedWidth(width_cur - 1)
+    #         self.centralwidget.setFixedWidth(width_cur)
+    #         self.centralwidget.setFixedHeight(height_cur - 1)
+    #         self.centralwidget.setFixedHeight(height_cur)
+    #         self.center()
 
     def choose_task(self):
         load_ind = self.comboBox_task.currentIndex()
@@ -68,11 +103,6 @@ class ProgramGUI(QtWidgets.QMainWindow, design_lbl.Ui_MainWindow):
         self.n_answered = 0
         self.is_finish = False
         self.answer_log = {}
-        self.dict_label_answer = {1: self.label_answer1, 2: self.label_answer2,
-                                  3: self.label_answer3, 4: self.label_answer4}
-
-        self.dict_checkbox = {1: self.checkBox_1, 2: self.checkBox_2,
-                              3: self.checkBox_3, 4: self.checkBox_4}
 
         self.answers_true = {}
         self.answers_false = {}
@@ -167,7 +197,8 @@ class ProgramGUI(QtWidgets.QMainWindow, design_lbl.Ui_MainWindow):
             current_answer_label = self.dict_label_answer[i]
             current_answer_label.setText('')
             current_checkbox = self.dict_checkbox[i]
-            current_checkbox.hide()
+            #current_checkbox.hide()
+            current_checkbox.setVisible(False)
             current_checkbox.setChecked(False)
             current_answer_label.setStyleSheet("background-color: rgb(250, 250, 255)")
 
